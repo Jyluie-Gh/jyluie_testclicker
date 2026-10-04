@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自分で作る.html</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h1>ハローワールド(HTML Clicker!)</h1>
+<h3>こちらは、クリックするだけのクリッカーゲームでした<br>今はいろいろ追加されたよ！</h3> <hr>
+</head>
+
+<body>
+　<span class="number" id="click" style="font-size:48px;">0click / 毎秒0Click / Rebornpoint 0</span>
+  <br>
+　<button class="btn" id="Button" style="height: 160px; font-size: 64px;" >:)</button>
+ <br>
+  <button class="btn" style="font-size:18px;" id="Button2">Click Up Grade</button>
+  <span class="number" id="grade" style="font-size:24px;">level:1 cost:10</span>
+ <br>
+  <button class="btn" style="font-size:18px;" id="Button3">Auto Time!</button>
+  <span class="number" id="Autotm" style="font-size:24px;">level:0 cost:0</span>
+  <br>
+  <button class="btn" id="Button4" style="color: #0b0;">Reborn!</button>
+  <span class="number" id="Reborn" style="font-size:24px;">cost:1000</span>
+  <br>
+  <button class="btn" id="Button5" style="font-size:18px;">time speed</button>
+  <span class="number" id="time" style="font-size:24px;">Reborncost:1</span>
+  <button class="btn" id="Button6" style="font-size:18px;">CRITICAL CLICK</button>
+  <span class="number" id="critical" style="font-size:24px;">Reborncost:3 / Critical 5%</span>
+    
+</body>
+    
+<style>
+:root {
+  --text: #fff;
+}
+
+body {
+  background-color: #888; color: var(--text);
+}
+.ani { position: absolute; animation: uiin 1s;  color: #000; pointer-events: none; font-size: 18px;}
+.ani2 { position: absolute; animation: uiin 1s;  color: #fff; pointer-events: none; font-size: 18px;}
+@keyframes uiin { 0% { transform: translateY(0); } 100% { transform: translateY(-20px); } }
+
+button {
+  width: 160px;
+  height: 80px;
+  font-size: 32px;
+  color: #555;
+  text-shadow: 2px 2px 4px #bbb;
+}
+
+.btn{ transform: scale(1); transition: transform 0.05s; }
+.btn:active{ transform: scale(0.95); }
+
+.number {
+ -webkit-text-stroke: 0.75px #fff;
+ text-shadow: 0px 0px 10px #000;
+ color: #f88;
+}
+</style>
+
+<script>
+ let click = 0
+ let grade = 1
+ let gradecost = 10
+ let Auto = 0
+ let Autocost = 50
+ let Reborncost = 1000
+ let Reborncount = 0
+ let Rebpoint = 0
+ let time = 0
+ let timecost = 1
+ let clkhy = 0
+ const kmb = ["K","M","B","T","Qa","Qu"];
+ let za
+ let crt = 5
+ let rand = Math.random()
+  Button.addEventListener( "click", (event) => {
+   click = click + Math.round(grade * (Reborncount*0.5+1));
+   let pon = document.createElement("div")
+   pon.textContent = "+" + Math.round(grade * (Reborncount*0.5+1))
+   document.body.appendChild(pon)
+   pon.classList.add("ani")
+   pon.style.top = event.pageY + "px";
+   pon.style.left = event.pageX + "px";
+   pon.addEventListener ( "animationend" , () => {
+    pon.remove()
+   });
+  });
+  Button2.addEventListener( "click", () => {
+   if( gradecost <= click ) {
+    grade = grade + 1;
+    click = click - gradecost;
+    gradecost = Math.round(gradecost * 1.6);
+   } else {
+   alert("クリックが " + (gradecost - click) + " 足りないよ");
+   }
+  });
+  Button3.addEventListener( "click", () => {
+   if( Autocost <= click ) {
+    Auto = Auto + 1
+    click = click - Autocost;
+    Autocost = Math.round(Autocost * 1.45);
+   } else {
+   alert("クリックが " + (Autocost - click) + " 足りないよ");
+   }
+  });
+  Button4.addEventListener( "click", () => {
+   if( Reborncost <= click ) {
+    Auto = 0;
+    click = 0;
+    grade = 1;
+    Autocost = 50;
+    gradecost = 10;
+    Reborncount = Reborncount + 1;
+    Rebpoint = Rebpoint + 1;
+    Reborncost = Math.round(Reborncost * 1.35)
+    alert("リボーンしたよ！");
+   } else {
+   alert("クリックが " + (Reborncost - click) + " 足りないよ");
+   }
+  });
+
+  Button5.addEventListener( "click", () => {
+   if( timecost <= Rebpoint ) {
+    if ( time == 19 ) {
+     alert("レベルマックスだよ！");
+    } else {
+     time = time + 1;
+     Rebpoint = Rebpoint - timecost;
+     timecost = Math.round(timecost * 1.5);
+    }
+   } else {
+    alert("Rebornpointが " + (timecost - Rebpoint) + " 足りないよ");
+   }
+  });
+
+function loop() {
+ hyouji();
+ document.getElementById("grade").textContent = "level: " + grade + " cost: " + gradecost;
+ document.getElementById("Autotm").textContent = "level: " + Auto + " cost: " + Autocost;
+ document.getElementById("click").textContent = clkhy + "click / 毎秒" + Math.round(Auto * (Reborncount*0.5+1)) + "Click / Rebornpoint " + Rebpoint;
+ document.getElementById("Reborn").textContent = "cost: " + Reborncost + " Reborn回数" + Reborncount + " Reborn倍率" + (Reborncount*0.5+1);
+ document.getElementById("time").textContent = "level: " + time + " Reborncost: " + timecost + " time: " + (1-time/20) + "sec";
+ requestAnimationFrame(loop);
+}
+
+function Autotime() {
+ click = click + Math.round(Auto * (Reborncount*0.5+1));
+ if ( Auto > 0 ) {
+  let pona = document.createElement("div")
+  pona.textContent = "+" + Math.round(Auto * (Reborncount*0.5+1))
+  document.body.appendChild(pona)
+  pona.classList.add("ani2")
+  pona.style.top = "350px";
+  pona.style.left = "200px";
+  pona.addEventListener ( "animationend" , () => {
+   pona.remove()
+  });
+ }
+ setTimeout(Autotime, (1-time/20)*1000);
+}
+
+function hyouji() {
+ if ( click >= 1000 ) {
+  za = 1
+  while ( ( click / ( 10 ** ( za * 3) ) ) >= 1 ) { za = za + 1; }
+  za = za - 1; 
+  clkhy = ( click / ( 10 ** ( za * 3) ) ).toFixed(3) + kmb[za-1]  
+ } else { clkhy = click }
+}
+
+loop();
+Autotime();
+</script>
